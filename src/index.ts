@@ -17,6 +17,7 @@ export interface TemplateOptions {
 export interface DocData {
   title: string;
   description: string;
+  path: string;
   keywords?: string[];
   [key: string]: any;
 }
@@ -43,6 +44,9 @@ export class JengaSEO {
     }
     if (!doc.description) {
       throw new Error('Description is required in document data');
+    }
+    if (!doc.path) {
+      throw new Error('Path is required in document data');
     }
   }
 
@@ -81,6 +85,7 @@ export class JengaSEO {
 
   private _generateTemplate(doc: DocData): string {
     const keywords = doc.keywords ? doc.keywords.join(', ') : '';
+
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +103,7 @@ export class JengaSEO {
 </head>
 <body>
   <script>
-    window.location.href = '${this.options.baseUrl}';
+    window.location.href = '${this.options.baseUrl}${doc.path}';
   </script>
 </body>
 </html>
@@ -114,9 +119,10 @@ export class JengaSEO {
       fs.mkdirSync(outputPath, { recursive: true });
     }
 
-    docs.forEach((doc, index) => {
+    docs.forEach((doc) => {
       const template = this._generateTemplate(doc);
-      const filePath = path.join(outputPath, `page-${index}.html`);
+      const filePath = path.join(outputPath, doc.path, 'index.html');
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
       fs.writeFileSync(filePath, template);
     });
   }
@@ -148,9 +154,13 @@ export function cli(): void {
     .description('Generate SEO-friendly static HTML templates for SPAs')
     .version('1.0.4')
     .requiredOption('-d, --data <path>', chalk.cyan('Path to docs.json file'))
-    .requiredOption('-o, --output <path>', chalk.cyan('Output directory for generated files'))
+    .requiredOption(
+      '-o, --output <path>',
+      chalk.cyan('Output directory for generated files'),
+      'public/link'
+    )
     .option('-b, --base-url <url>', chalk.cyan('Base URL for your site'), 'https://your-domain.com')
-    .option('-a, --author <name>', chalk.cyan('Author name'), 'Your Name')
+    .option('-a, --author <n>', chalk.cyan('Author name'), 'Your Name')
     .option(
       '-i, --image <url>',
       chalk.cyan('Default image URL'),
