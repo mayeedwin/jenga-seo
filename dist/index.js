@@ -13,7 +13,7 @@ class JengaSEO {
     constructor(options) {
         this.options = options;
     }
-    validateOptions() {
+    _validateOptions() {
         if (!this.options.data) {
             throw new Error('Data file path is required');
         }
@@ -21,17 +21,34 @@ class JengaSEO {
             throw new Error('Output directory is required');
         }
     }
-    readDataFile() {
+    _validateDocData(doc) {
+        if (!doc.title) {
+            throw new Error('Title is required in document data');
+        }
+        if (!doc.description) {
+            throw new Error('Description is required in document data');
+        }
+        if (!doc.content) {
+            throw new Error('Content is required in document data');
+        }
+    }
+    _readDataFile() {
         try {
             const data = fs_1.default.readFileSync(this.options.data, 'utf8');
-            return JSON.parse(data);
+            const docs = JSON.parse(data);
+            if (!Array.isArray(docs)) {
+                throw new Error('Data file must contain an array of documents');
+            }
+            docs.forEach((doc) => this._validateDocData(doc));
+            return docs;
         }
         catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             throw new Error(`Failed to read data file: ${errorMessage}`);
         }
     }
-    generateTemplate(doc) {
+    _generateTemplate(doc) {
+        const keywords = doc.keywords ? doc.keywords.join(', ') : '';
         return `
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +57,7 @@ class JengaSEO {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${doc.title}</title>
   <meta name="description" content="${doc.description}">
+  <meta name="keywords" content="${keywords}">
   <meta name="author" content="${this.options.author}">
   <meta property="og:title" content="${doc.title}">
   <meta property="og:description" content="${doc.description}">
@@ -57,13 +75,13 @@ class JengaSEO {
     `.trim();
     }
     generate() {
-        this.validateOptions();
-        const docs = this.readDataFile();
+        this._validateOptions();
+        const docs = this._readDataFile();
         if (!fs_1.default.existsSync(this.options.output)) {
             fs_1.default.mkdirSync(this.options.output, { recursive: true });
         }
         docs.forEach((doc, index) => {
-            const template = this.generateTemplate(doc);
+            const template = this._generateTemplate(doc);
             const outputPath = path_1.default.join(this.options.output, `page-${index}.html`);
             fs_1.default.writeFileSync(outputPath, template);
         });

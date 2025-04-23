@@ -10,14 +10,16 @@ export interface DocData {
     title: string;
     description: string;
     content: string;
+    keywords?: string[];
     [key: string]: any;
 }
 export declare class JengaSEO {
     private options;
     constructor(options: TemplateOptions);
-    private validateOptions;
-    private readDataFile;
-    private generateTemplate;
+    private _validateOptions;
+    private _validateDocData;
+    private _readDataFile;
+    private _generateTemplate;
     generate(): void;
 }
 export declare function cli(): void;
