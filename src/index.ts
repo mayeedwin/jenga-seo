@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
@@ -15,7 +17,6 @@ export interface TemplateOptions {
 export interface DocData {
   title: string;
   description: string;
-  content: string;
   keywords?: string[];
   [key: string]: any;
 }
@@ -43,25 +44,38 @@ export class JengaSEO {
     if (!doc.description) {
       throw new Error('Description is required in document data');
     }
-    if (!doc.content) {
-      throw new Error('Content is required in document data');
-    }
   }
 
   private _readDataFile(): DocData[] {
     try {
-      const data = fs.readFileSync(this.options.data, 'utf8');
+      const dataFilePath = path.resolve(process.cwd(), this.options.data);
+      printInfo(`Reading data file from: ${dataFilePath}`);
+
+      if (!fs.existsSync(dataFilePath)) {
+        throw new Error(
+          `File not found: ${dataFilePath}. Please ensure the path is correct relative to where you're running the command.`
+        );
+      }
+
+      const data = fs.readFileSync(dataFilePath, 'utf8');
+      printInfo(`File content: ${data.substring(0, 100)}...`); // Show first 100 chars for debugging
+
       const docs = JSON.parse(data);
 
       if (!Array.isArray(docs)) {
-        throw new Error('Data file must contain an array of documents');
+        throw new Error(`Data file must contain an array of documents. Found: ${typeof docs}`);
+      }
+
+      if (docs.length === 0) {
+        throw new Error('Data file contains an empty array');
       }
 
       docs.forEach((doc) => this._validateDocData(doc));
       return docs;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      throw new Error(`Failed to read data file: ${errorMessage}`);
+      printError(`Failed to read data file: ${errorMessage}`);
+      throw error;
     }
   }
 
@@ -83,8 +97,6 @@ export class JengaSEO {
   ${this.options.gaId ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${this.options.gaId}"></script>` : ''}
 </head>
 <body>
-  <h1>${doc.title}</h1>
-  <div>${doc.content}</div>
   <script>
     window.location.href = '${this.options.baseUrl}';
   </script>
@@ -97,21 +109,21 @@ export class JengaSEO {
     this._validateOptions();
     const docs = this._readDataFile();
 
-    if (!fs.existsSync(this.options.output)) {
-      fs.mkdirSync(this.options.output, { recursive: true });
+    const outputPath = path.resolve(process.cwd(), this.options.output);
+    if (!fs.existsSync(outputPath)) {
+      fs.mkdirSync(outputPath, { recursive: true });
     }
 
     docs.forEach((doc, index) => {
       const template = this._generateTemplate(doc);
-      const outputPath = path.join(this.options.output, `page-${index}.html`);
-      fs.writeFileSync(outputPath, template);
+      const filePath = path.join(outputPath, `page-${index}.html`);
+      fs.writeFileSync(filePath, template);
     });
   }
 }
 
 function printBanner(): void {
-  console.log('\n' + chalk.bold.cyan('Jenga-SEO') + chalk.gray(' - SEO Template Generator'));
-  console.log(chalk.dim('Version: 1.0.0\n'));
+  console.log('\n' + chalk.bold.cyan('Jenga-SEO') + chalk.gray(' - SEO Template Generator\n'));
 }
 
 function printSuccess(message: string): void {
@@ -134,7 +146,7 @@ export function cli(): void {
   program
     .name('jenga-seo')
     .description('Generate SEO-friendly static HTML templates for SPAs')
-    .version('1.0.0')
+    .version('1.0.4')
     .requiredOption('-d, --data <path>', chalk.cyan('Path to docs.json file'))
     .requiredOption('-o, --output <path>', chalk.cyan('Output directory for generated files'))
     .option('-b, --base-url <url>', chalk.cyan('Base URL for your site'), 'https://your-domain.com')

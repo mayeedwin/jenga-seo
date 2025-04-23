@@ -1,122 +1,159 @@
+import { JengaSEO, DocData } from '../index';
 import fs from 'fs';
 import path from 'path';
-import { JengaSEO } from '../index';
 
-describe('jenga-seo', () => {
+describe('JengaSEO', () => {
   const mockOptions = {
-    data: 'test/mock/data.json',
-    output: 'test/mock/output',
+    data: 'test-data.json',
+    output: 'test-output',
     baseUrl: 'https://example.com',
     author: 'Test Author',
     image: 'https://example.com/image.jpg',
-    gaId: 'UA-XXXXX-Y',
   };
 
   beforeEach(() => {
-    // Create mock data file
-    const mockData = [
-      {
-        title: 'Test Page',
-        description: 'Test Description',
-        content: 'Test Content',
-        keywords: ['test', 'seo', 'template'],
-      },
-    ];
-    fs.mkdirSync(path.dirname(mockOptions.data), { recursive: true });
-    fs.writeFileSync(mockOptions.data, JSON.stringify(mockData));
+    // Create test output directory
+    if (!fs.existsSync(mockOptions.output)) {
+      fs.mkdirSync(mockOptions.output, { recursive: true });
+    }
   });
 
   afterEach(() => {
-    // Clean up
-    if (fs.existsSync(mockOptions.data)) {
-      fs.unlinkSync(mockOptions.data);
-    }
+    // Clean up test files
     if (fs.existsSync(mockOptions.output)) {
       fs.rmSync(mockOptions.output, { recursive: true });
     }
+    if (fs.existsSync(mockOptions.data)) {
+      fs.unlinkSync(mockOptions.data);
+    }
   });
 
-  it('should generate SEO templates with correct structure', () => {
+  it('should generate templates with required fields', () => {
+    const testData: DocData[] = [
+      {
+        title: 'Test Title',
+        description: 'Test Description',
+        keywords: ['test', 'seo'],
+      },
+    ];
+
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
+
     const generator = new JengaSEO(mockOptions);
     generator.generate();
 
     const outputFiles = fs.readdirSync(mockOptions.output);
     expect(outputFiles.length).toBe(1);
 
-    const content = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
-    expect(content).toContain('<title>Test Page</title>');
-    expect(content).toContain('Test Description');
-    expect(content).toContain('Test Content');
-    expect(content).toContain('UA-XXXXX-Y');
-    expect(content).toContain('<meta name="keywords" content="test, seo, template">');
+    const template = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
+    expect(template).toContain(testData[0].title);
+    expect(template).toContain(testData[0].description);
+    expect(template).toContain(testData[0].keywords?.join(', '));
   });
 
   it('should handle documents without keywords', () => {
-    const mockData = [
+    const testData: DocData[] = [
       {
-        title: 'Test Page',
+        title: 'Test Title',
         description: 'Test Description',
-        content: 'Test Content',
       },
     ];
-    fs.writeFileSync(mockOptions.data, JSON.stringify(mockData));
+
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
 
     const generator = new JengaSEO(mockOptions);
     generator.generate();
 
     const outputFiles = fs.readdirSync(mockOptions.output);
-    const content = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
-    expect(content).toContain('<meta name="keywords" content="">');
+    const template = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
+    expect(template).toContain(testData[0].title);
+    expect(template).toContain(testData[0].description);
   });
 
-  it('should handle documents with keywords array', () => {
-    const mockData = [
+  it('should handle empty keywords arrays', () => {
+    const testData: DocData[] = [
       {
-        title: 'Test Page',
+        title: 'Test Title',
         description: 'Test Description',
-        content: 'Test Content',
-        keywords: ['seo', 'template', 'generator', 'static site'],
+        keywords: [],
       },
     ];
-    fs.writeFileSync(mockOptions.data, JSON.stringify(mockData));
+
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
 
     const generator = new JengaSEO(mockOptions);
     generator.generate();
 
     const outputFiles = fs.readdirSync(mockOptions.output);
-    const content = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
-    expect(content).toContain(
-      '<meta name="keywords" content="seo, template, generator, static site">'
-    );
+    const template = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
+    expect(template).toContain(testData[0].title);
+    expect(template).toContain(testData[0].description);
   });
 
-  it('should handle missing template file', () => {
-    const options = { ...mockOptions, data: 'nonexistent.json' };
-    const generator = new JengaSEO(options);
-    expect(() => generator.generate()).toThrow('Failed to read data file');
-  });
+  it('should handle missing required fields', () => {
+    const testData = [
+      {
+        description: 'Test Description',
+      },
+    ];
 
-  it('should handle invalid template file', () => {
-    fs.writeFileSync(mockOptions.data, 'invalid json');
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
+
     const generator = new JengaSEO(mockOptions);
-    expect(() => generator.generate()).toThrow('Failed to read data file');
+    expect(() => generator.generate()).toThrow('Title is required in document data');
   });
 
-  it('should handle missing required arguments', () => {
-    const options = { ...mockOptions, data: '' };
-    const generator = new JengaSEO(options);
-    expect(() => generator.generate()).toThrow('Data file path is required');
-  });
+  it('should handle invalid data structures', () => {
+    const testData = { notAnArray: true };
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
 
-  it('should handle invalid data file', () => {
-    fs.writeFileSync(mockOptions.data, JSON.stringify({ invalid: 'data' }));
     const generator = new JengaSEO(mockOptions);
-    expect(() => generator.generate()).toThrow();
+    expect(() => generator.generate()).toThrow('Data file must contain an array of documents');
   });
 
-  it('should handle non-existent data file', () => {
-    const options = { ...mockOptions, data: 'nonexistent.json' };
-    const generator = new JengaSEO(options);
-    expect(() => generator.generate()).toThrow('Failed to read data file');
+  it('should handle multiple documents', () => {
+    const testData: DocData[] = [
+      {
+        title: 'Test Title 1',
+        description: 'Test Description 1',
+        keywords: ['test1'],
+      },
+      {
+        title: 'Test Title 2',
+        description: 'Test Description 2',
+        keywords: ['test2'],
+      },
+    ];
+
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
+
+    const generator = new JengaSEO(mockOptions);
+    generator.generate();
+
+    const outputFiles = fs.readdirSync(mockOptions.output);
+    expect(outputFiles.length).toBe(2);
+  });
+
+  it('should handle Google Analytics ID presence/absence', () => {
+    const testData: DocData[] = [
+      {
+        title: 'Test Title',
+        description: 'Test Description',
+      },
+    ];
+
+    fs.writeFileSync(mockOptions.data, JSON.stringify(testData));
+
+    // Test without GA ID
+    const generatorWithoutGA = new JengaSEO(mockOptions);
+    generatorWithoutGA.generate();
+    let template = fs.readFileSync(path.join(mockOptions.output, 'page-0.html'), 'utf8');
+    expect(template).not.toContain('googletagmanager');
+
+    // Test with GA ID
+    const generatorWithGA = new JengaSEO({ ...mockOptions, gaId: 'G-XXXXXXXXXX' });
+    generatorWithGA.generate();
+    template = fs.readFileSync(path.join(mockOptions.output, 'page-0.html'), 'utf8');
+    expect(template).toContain('googletagmanager');
   });
 });

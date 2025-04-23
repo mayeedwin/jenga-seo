@@ -86,12 +86,19 @@ Your data file (e.g., docs.json) should be an array of objects with this structu
   {
     "title": "Page Title",
     "description": "Page description for SEO",
-    "content": "Main content of the page",
-    "keywords": ["seo", "template", "generator", "static site"], // Optional array of keywords
-    "image": "https://example.com/images/page-specific-image.jpg" // Optional, overrides default image
+    "keywords": ["seo", "template", "generator", "static site"] // Optional array of keywords
   }
 ]
 ```
+
+Required fields:
+
+- `title`: The title of the page
+- `description`: The description for SEO
+
+Optional fields:
+
+- `keywords`: Array of keywords for SEO
 
 #### Command Line Arguments
 
