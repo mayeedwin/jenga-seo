@@ -1,5 +1,5 @@
 {
-  "name": "jenga-seo",
+  "name": "jenga-seo-lite",
   "version": "1.0.0",
   "description": "SEO template generator for SPAs",
   "main": "index.js",
@@ -39,12 +39,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pwafire/jenga-seo.git"
+    "url": "git+https://github.com/mayeedwin/jenga-seo-lite.git"
   },
   "bugs": {
-    "url": "https://github.com/pwafire/jenga-seo/issues"
+    "url": "https://github.com/mayeedwin/jenga-seo-lite/issues"
   },
-  "homepage": "https://github.com/pwafire/jenga-seo#readme",
+  "homepage": "https://github.com/mayeedwin/jenga-seo-lite#readme",
   "engines": {
     "node": ">=14.0.0"
   },
