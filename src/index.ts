@@ -27,7 +27,7 @@ export class JengaSEO {
     this.options = options;
   }
 
-  private validateOptions(): void {
+  private _validateOptions(): void {
     if (!this.options.data) {
       throw new Error('Data file path is required');
     }
@@ -36,17 +36,36 @@ export class JengaSEO {
     }
   }
 
-  private readDataFile(): DocData[] {
+  private _validateDocData(doc: DocData): void {
+    if (!doc.title) {
+      throw new Error('Title is required in document data');
+    }
+    if (!doc.description) {
+      throw new Error('Description is required in document data');
+    }
+    if (!doc.content) {
+      throw new Error('Content is required in document data');
+    }
+  }
+
+  private _readDataFile(): DocData[] {
     try {
       const data = fs.readFileSync(this.options.data, 'utf8');
-      return JSON.parse(data);
+      const docs = JSON.parse(data);
+
+      if (!Array.isArray(docs)) {
+        throw new Error('Data file must contain an array of documents');
+      }
+
+      docs.forEach((doc) => this._validateDocData(doc));
+      return docs;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw new Error(`Failed to read data file: ${errorMessage}`);
     }
   }
 
-  private generateTemplate(doc: DocData): string {
+  private _generateTemplate(doc: DocData): string {
     const keywords = doc.keywords ? doc.keywords.join(', ') : '';
     return `
 <!DOCTYPE html>
@@ -75,15 +94,15 @@ export class JengaSEO {
   }
 
   public generate(): void {
-    this.validateOptions();
-    const docs = this.readDataFile();
+    this._validateOptions();
+    const docs = this._readDataFile();
 
     if (!fs.existsSync(this.options.output)) {
       fs.mkdirSync(this.options.output, { recursive: true });
     }
 
     docs.forEach((doc, index) => {
-      const template = this.generateTemplate(doc);
+      const template = this._generateTemplate(doc);
       const outputPath = path.join(this.options.output, `page-${index}.html`);
       fs.writeFileSync(outputPath, template);
     });
