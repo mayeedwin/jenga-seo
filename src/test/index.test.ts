@@ -1,4 +1,4 @@
-import { JengaSEO, DocData } from '../index';
+import { JengaSEO } from '../index';
 import fs from 'fs';
 import path from 'path';
 

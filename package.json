@@ -1,6 +1,6 @@
 {
   "name": "jenga-seo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "SEO template generator for SPAs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
