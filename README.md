@@ -13,7 +13,8 @@ A simple SEO template generator for Single Page Applications (SPAs).
 ## Installation
 
 ```bash
-npm install jenga-seo
+# Install as a development dependency
+npm install jenga-seo --save-dev
 ```
 
 ## Quick Start

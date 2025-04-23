@@ -1,0 +1,19 @@
+[
+  {
+    "title": "Test Page 1",
+    "description": "This is a test page for SEO",
+    "path": "/test-page-1",
+    "keywords": ["test", "seo", "page1"]
+  },
+  {
+    "title": "Test Page 2",
+    "description": "Another test page for SEO",
+    "path": "/test-page-2",
+    "keywords": ["test", "seo", "page2"]
+  },
+  {
+    "title": "Test Page 3",
+    "description": "Test page without keywords",
+    "path": "/test-page-3"
+  }
+]

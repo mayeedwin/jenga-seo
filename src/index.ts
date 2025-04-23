@@ -56,9 +56,7 @@ export class JengaSEO {
       printInfo(`Reading data file from: ${dataFilePath}`);
 
       if (!fs.existsSync(dataFilePath)) {
-        throw new Error(
-          `File not found: ${dataFilePath}. Please ensure the path is correct relative to where you're running the command.`
-        );
+        throw new Error(`File not found: ${dataFilePath}`);
       }
 
       const data = fs.readFileSync(dataFilePath, 'utf8');
@@ -78,7 +76,7 @@ export class JengaSEO {
       return docs;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      printError(`Failed to read data file: ${errorMessage}`);
+      printError(errorMessage);
       throw error;
     }
   }
