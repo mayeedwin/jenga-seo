@@ -1,6 +1,6 @@
-# Jenga-SEO-Lite - SEO Template Generator for SPAs
+# Jenga-SEO - SEO Template Generator for SPAs
 
-Jenga-SEO-Lite is a powerful static HTML template generator designed to create SEO-friendly pages that serve as a bridge between search engines and your Single Page Application (SPA). The name "Jenga" comes from the Swahili word meaning "to build", reflecting its purpose of building SEO solutions.
+Jenga-SEO is a powerful static HTML template generator designed to create SEO-friendly pages that serve as a bridge between search engines and your Single Page Application (SPA). The name "Jenga" comes from the Swahili word meaning "to build", reflecting its purpose of building SEO solutions.
 
 ## Features
 
@@ -15,37 +15,16 @@ Jenga-SEO-Lite is a powerful static HTML template generator designed to create S
 
 ## Installation
 
-### As an npm package
-
 ```bash
-npm install jenga-seo-lite
-```
-
-### Local Development
-
-If you're working with the local version:
-
-```bash
-# In your project's root directory
-npm install ./jenga
+npm install jenga-seo
 ```
 
 ## Usage
 
-### As a Local Package
-
-When using the local version, you can run the generator directly:
+### Basic Usage
 
 ```bash
-node jenga/index.js --data src/data/docs.json --output public/link --base-url https://example.com --author "John Doe" --image https://example.com/images/banner.jpg --ga-id UA-XXXXX-Y
-```
-
-### As an npm Package
-
-When installed as a package, you can run it using:
-
-```bash
-npx jenga-seo-lite --data src/data/docs.json --output public/link --base-url https://example.com --author "John Doe" --image https://example.com/images/banner.jpg --ga-id UA-XXXXX-Y
+npx jenga-seo --data src/data/docs.json --output public/link --base-url https://example.com --author "John Doe" --image https://example.com/images/banner.jpg --ga-id UA-XXXXX-Y
 ```
 
 ### Integration with Build Process
@@ -56,7 +35,7 @@ Add to your project's package.json:
 {
   "scripts": {
     "prebuild:seo": "echo 'Starting SEO template generation...'",
-    "build:seo": "jenga-seo-lite --data src/data/docs.json --output public/link --base-url https://example.com --author \"John Doe\" --image https://example.com/images/banner.jpg --ga-id UA-XXXXX-Y || (echo 'Error: SEO template generation failed' && exit 1)",
+    "build:seo": "jenga-seo --data src/data/docs.json --output public/link --base-url https://example.com --author \"John Doe\" --image https://example.com/images/banner.jpg --ga-id UA-XXXXX-Y || (echo 'Error: SEO template generation failed' && exit 1)",
     "postbuild:seo": "echo 'SEO template generation completed successfully!'",
     "build": "npm run build:seo && react-scripts build"
   }
