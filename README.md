@@ -4,15 +4,15 @@ A powerful TypeScript-based static HTML template generator designed to create SE
 
 ## Features
 
-1. 🎯 Generates SEO-optimized static HTML templates
-2. 📱 Mobile-friendly and responsive design
-3. 📊 Rich structured data for better search engine visibility
-4. 📈 Google Analytics integration
-5. 🌐 Social media meta tags (Open Graph)
-6. ⚡ Performance optimized with resource hints
-7. 🔄 Automatic redirects to SPA content
-8. ⚙️ TypeScript support with full type definitions
-9. 🛠️ Configurable through command line arguments
+1. Generates SEO-optimized static HTML templates
+2. Mobile-friendly and responsive design
+3. Rich structured data for better search engine visibility
+4. Google Analytics integration
+5. Social media meta tags (Open Graph)
+6. Performance optimized with resource hints
+7. Automatic redirects to SPA content
+8. TypeScript support with full type definitions
+9. Configurable through command line arguments
 
 ## Installation
 
