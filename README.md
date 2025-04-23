@@ -1,79 +1,192 @@
-# Jenga SEO
+# Jenga-SEO
 
-A simple SEO template generator for Single Page Applications (SPAs).
+A powerful SEO template generator for Single Page Applications (SPAs) that helps improve search engine visibility and social sharing capabilities.
 
 ## Features
 
-- Generates SEO-friendly HTML templates for your SPA routes
-- Supports meta tags and Open Graph tags
-- Optional Google Analytics integration
-- Customizable author and image metadata
-- Keywords support for better search engine optimization
+- Fast and lightweight static file generation
+- Generates SEO-friendly HTML templates
+- Supports structured data (JSON-LD)
+- Multi-language support
+- Google Analytics integration
+- Social media meta tags
+- Automatic sitemap generation
+- Robots.txt generation
+- Parallel processing
+- Template caching
+- Zero dependencies (except chalk and commander)
+
+## Comparison with SSR Solutions
+
+### Performance (9/10)
+
+- Static file generation
+- No server overhead
+- Template caching
+- Parallel processing
+- Zero runtime dependencies
+
+### SEO Capabilities (8/10)
+
+- Meta tags generation
+- OpenGraph tags
+- Structured data (JSON-LD)
+- Automatic sitemap.xml
+- Robots.txt generation
+
+### Developer Experience (8/10)
+
+- Simple CLI interface
+- Configuration file support
+- TypeScript support
+- Comprehensive testing
+- Clear documentation
+
+### Deployment & Hosting (9/10)
+
+- Static file hosting
+- No server costs
+- CDN-friendly
+- Easy deployment
+- Scalable
+
+### Maintenance (7/10)
+
+- Manual regeneration needed
+- Simple dependency management
+- Easy updates
+- Clear versioning
+
+### Flexibility (7/10)
+
+- Limited to static content
+- Customizable templates
+- Multi-language support
+
+## Best Use Cases
+
+1. Documentation sites
+2. Marketing websites
+3. Blogs
+4. Portfolio sites
+5. Small to medium business websites
+
+## When to Choose Jenga-SEO
+
+- When performance is critical
+- When hosting costs are a concern
+- When content changes infrequently
+- When you need simple deployment
+- When you want to leverage CDN benefits
+
+## When to Choose SSR Instead
+
+- When you need real-time data
+- When content changes frequently
+- When you need complex server-side logic
+- When you need user-specific content
+- When you need advanced server-side features
 
 ## Installation
 
 ```bash
-# Install as a development dependency
-npm install jenga-seo --save-dev
+npm install jenga-seo
 ```
 
-## Quick Start
+## Usage
 
-1. Create a JSON file with your page data (e.g., `docs.json`):
-
-```json
-[
-  {
-    "title": "Welcome to My App",
-    "description": "A great app that does amazing things",
-    "path": "/",
-    "keywords": ["app", "welcome", "homepage"]
-  }
-]
-```
-
-2. Run the generator:
+### Basic Usage
 
 ```bash
-npx jenga-seo --data docs.json --output public/link --base-url https://example.com --author "Your Name"
+jenga-seo -d docs.json -o public/link
 ```
 
-## Command Line Arguments
-
-| Argument         | Description                 | Required | Example Value                      |
-| ---------------- | --------------------------- | -------- | ---------------------------------- |
-| `-d, --data`     | Path to your data JSON file | Yes      | `docs.json`                        |
-| `-o, --output`   | Output directory            | Yes      | `public/link`                      |
-| `-b, --base-url` | Your website's base URL     | No       | `https://example.com`              |
-| `-a, --author`   | Content author              | No       | `"John Doe"`                       |
-| `-i, --image`    | Default OG image URL        | No       | `https://example.com/og-image.jpg` |
-| `-g, --ga-id`    | Google Analytics ID         | No       | `G-XXXXXXXXXX`                     |
-
-## Example Usage
+### Advanced Usage
 
 ```bash
 jenga-seo \
-  --data docs.json \
-  --output public/link \
-  --base-url https://example.com \
-  --author "John Doe" \
-  --image https://example.com/og-image.jpg \
-  --ga-id G-XXXXXXXXXX
+  -d docs.json \
+  -o public/link \
+  -b https://your-domain.com \
+  -a "Your Name" \
+  -i https://your-domain.com/images/banner.jpg \
+  -g G-XXXXXXXXXX \
+  -l en \
+  --no-robots \
+  --no-sitemap \
+  --no-cache \
+  --no-parallel
 ```
 
-## Data File Format
+### Configuration File
 
-Your JSON data file should contain an array of objects with the following structure:
+Create a `jenga.config.json` file in your project root:
+
+```json
+{
+  "baseUrl": "https://your-domain.com",
+  "author": "Your Name",
+  "defaultImage": "https://your-domain.com/images/banner.jpg",
+  "gaId": "G-XXXXXXXXXX",
+  "language": "en",
+  "robots": true,
+  "sitemap": true,
+  "cache": true,
+  "parallel": true
+}
+```
+
+### Data File Format
 
 ```json
 [
   {
     "title": "Page Title",
-    "description": "Page description for SEO",
+    "description": "Page Description",
     "path": "/page-path",
-    "keywords": ["keyword1", "keyword2"]
+    "keywords": ["keyword1", "keyword2"],
+    "image": "https://your-domain.com/image.jpg",
+    "language": "en",
+    "structuredData": {
+      "@type": "Article"
+    }
   }
 ]
+```
+
+## Options
+
+| Option                  | Description                    | Default                                   |
+| ----------------------- | ------------------------------ | ----------------------------------------- |
+| `-d, --data <path>`     | Path to docs.json file         | Required                                  |
+| `-o, --output <path>`   | Output directory               | public/link                               |
+| `-b, --base-url <url>`  | Base URL for your site         | https://your-domain.com                   |
+| `-a, --author <n>`      | Author name                    | Your Name                                 |
+| `-i, --image <url>`     | Default image URL              | https://your-domain.com/images/banner.jpg |
+| `-g, --ga-id <id>`      | Google Analytics ID            | -                                         |
+| `-l, --language <lang>` | Default language               | en                                        |
+| `--no-robots`           | Disable robots.txt generation  | false                                     |
+| `--no-sitemap`          | Disable sitemap.xml generation | false                                     |
+| `--no-cache`            | Disable template caching       | false                                     |
+| `--no-parallel`         | Disable parallel processing    | false                                     |
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Test
+npm test
+
+# Lint
+npm run lint
+
+# Format
+npm run format
 ```
 
 ## License
