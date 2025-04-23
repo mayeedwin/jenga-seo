@@ -1,0 +1,63 @@
+{
+  "name": "jenga-seo",
+  "version": "1.0.0",
+  "description": "SEO template generator for SPAs",
+  "main": "index.js",
+  "bin": {
+    "jenga-seo": "index.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build": "node index.js --data ../src/data/docs.json --output ../public/link --base-url https://example.com --author \"John Doe\" --image https://example.com/images/banner.jpg"
+  },
+  "keywords": [
+    "seo",
+    "spa",
+    "static",
+    "generator",
+    "template",
+    "html",
+    "search",
+    "optimization"
+  ],
+  "author": "Maye Edwin",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.9.0",
+    "prettier": "^3.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pwafire/jenga-seo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pwafire/jenga-seo/issues"
+  },
+  "homepage": "https://github.com/pwafire/jenga-seo#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "./coverage",
+    "collectCoverageFrom": [
+      "index.js"
+    ]
+  }
+}
