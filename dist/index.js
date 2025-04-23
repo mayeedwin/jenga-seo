@@ -8,6 +8,7 @@ exports.cli = cli;
 const commander_1 = require("commander");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+const chalk_1 = __importDefault(require("chalk"));
 class JengaSEO {
     constructor(options) {
         this.options = options;
@@ -69,27 +70,48 @@ class JengaSEO {
     }
 }
 exports.JengaSEO = JengaSEO;
+function printBanner() {
+    console.log('\n' + chalk_1.default.bold.cyan('Jenga-SEO') + chalk_1.default.gray(' - SEO Template Generator'));
+    console.log(chalk_1.default.dim('Version: 1.0.0\n'));
+}
+function printSuccess(message) {
+    console.log(chalk_1.default.green('✓') + ' ' + message);
+}
+function printInfo(message) {
+    console.log(chalk_1.default.blue('ℹ') + ' ' + message);
+}
+function printError(message) {
+    console.error(chalk_1.default.red('✖') + ' ' + chalk_1.default.red('Error: ') + message);
+}
 function cli() {
+    printBanner();
     const program = new commander_1.Command();
     program
         .name('jenga-seo')
         .description('Generate SEO-friendly static HTML templates for SPAs')
         .version('1.0.0')
-        .requiredOption('-d, --data <path>', 'Path to docs.json file')
-        .requiredOption('-o, --output <path>', 'Output directory for generated files')
-        .option('-b, --base-url <url>', 'Base URL for your site', 'https://your-domain.com')
-        .option('-a, --author <name>', 'Author name', 'Your Name')
-        .option('-i, --image <url>', 'Default image URL', 'https://your-domain.com/images/banner.jpg')
-        .option('-g, --ga-id <id>', 'Google Analytics ID')
+        .requiredOption('-d, --data <path>', chalk_1.default.cyan('Path to docs.json file'))
+        .requiredOption('-o, --output <path>', chalk_1.default.cyan('Output directory for generated files'))
+        .option('-b, --base-url <url>', chalk_1.default.cyan('Base URL for your site'), 'https://your-domain.com')
+        .option('-a, --author <name>', chalk_1.default.cyan('Author name'), 'Your Name')
+        .option('-i, --image <url>', chalk_1.default.cyan('Default image URL'), 'https://your-domain.com/images/banner.jpg')
+        .option('-g, --ga-id <id>', chalk_1.default.cyan('Google Analytics ID'))
         .action((options) => {
         try {
+            printInfo('Starting SEO template generation...');
+            printInfo(`Reading data from ${chalk_1.default.bold(options.data)}`);
             const generator = new JengaSEO(options);
             generator.generate();
-            console.log('SEO templates generated successfully!');
+            printSuccess('SEO templates generated successfully!');
+            printInfo(`Output directory: ${chalk_1.default.bold(options.output)}`);
+            printInfo(`Base URL: ${chalk_1.default.bold(options.baseUrl)}`);
+            if (options.gaId) {
+                printInfo(`Google Analytics ID: ${chalk_1.default.bold(options.gaId)}`);
+            }
         }
         catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            console.error('Error:', errorMessage);
+            printError(errorMessage);
             process.exit(1);
         }
     });

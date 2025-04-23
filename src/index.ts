@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
 
 export interface TemplateOptions {
   data: string;
@@ -86,27 +87,59 @@ export class JengaSEO {
   }
 }
 
+function printBanner(): void {
+  console.log('\n' + chalk.bold.cyan('Jenga-SEO') + chalk.gray(' - SEO Template Generator'));
+  console.log(chalk.dim('Version: 1.0.0\n'));
+}
+
+function printSuccess(message: string): void {
+  console.log(chalk.green('✓') + ' ' + message);
+}
+
+function printInfo(message: string): void {
+  console.log(chalk.blue('ℹ') + ' ' + message);
+}
+
+function printError(message: string): void {
+  console.error(chalk.red('✖') + ' ' + chalk.red('Error: ') + message);
+}
+
 export function cli(): void {
+  printBanner();
+
   const program = new Command();
 
   program
     .name('jenga-seo')
     .description('Generate SEO-friendly static HTML templates for SPAs')
     .version('1.0.0')
-    .requiredOption('-d, --data <path>', 'Path to docs.json file')
-    .requiredOption('-o, --output <path>', 'Output directory for generated files')
-    .option('-b, --base-url <url>', 'Base URL for your site', 'https://your-domain.com')
-    .option('-a, --author <name>', 'Author name', 'Your Name')
-    .option('-i, --image <url>', 'Default image URL', 'https://your-domain.com/images/banner.jpg')
-    .option('-g, --ga-id <id>', 'Google Analytics ID')
+    .requiredOption('-d, --data <path>', chalk.cyan('Path to docs.json file'))
+    .requiredOption('-o, --output <path>', chalk.cyan('Output directory for generated files'))
+    .option('-b, --base-url <url>', chalk.cyan('Base URL for your site'), 'https://your-domain.com')
+    .option('-a, --author <name>', chalk.cyan('Author name'), 'Your Name')
+    .option(
+      '-i, --image <url>',
+      chalk.cyan('Default image URL'),
+      'https://your-domain.com/images/banner.jpg'
+    )
+    .option('-g, --ga-id <id>', chalk.cyan('Google Analytics ID'))
     .action((options: TemplateOptions) => {
       try {
+        printInfo('Starting SEO template generation...');
+        printInfo(`Reading data from ${chalk.bold(options.data)}`);
+
         const generator = new JengaSEO(options);
         generator.generate();
-        console.log('SEO templates generated successfully!');
+
+        printSuccess('SEO templates generated successfully!');
+        printInfo(`Output directory: ${chalk.bold(options.output)}`);
+        printInfo(`Base URL: ${chalk.bold(options.baseUrl)}`);
+        if (options.gaId) {
+          printInfo(`Google Analytics ID: ${chalk.bold(options.gaId)}`);
+        }
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.error('Error:', errorMessage);
+        printError(errorMessage);
         process.exit(1);
       }
     });
