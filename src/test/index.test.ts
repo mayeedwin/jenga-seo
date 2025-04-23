@@ -19,6 +19,7 @@ describe('jenga-seo', () => {
         title: 'Test Page',
         description: 'Test Description',
         content: 'Test Content',
+        keywords: ['test', 'seo', 'template'],
       },
     ];
     fs.mkdirSync(path.dirname(mockOptions.data), { recursive: true });
@@ -47,6 +48,46 @@ describe('jenga-seo', () => {
     expect(content).toContain('Test Description');
     expect(content).toContain('Test Content');
     expect(content).toContain('UA-XXXXX-Y');
+    expect(content).toContain('<meta name="keywords" content="test, seo, template">');
+  });
+
+  it('should handle documents without keywords', () => {
+    const mockData = [
+      {
+        title: 'Test Page',
+        description: 'Test Description',
+        content: 'Test Content',
+      },
+    ];
+    fs.writeFileSync(mockOptions.data, JSON.stringify(mockData));
+
+    const generator = new JengaSEO(mockOptions);
+    generator.generate();
+
+    const outputFiles = fs.readdirSync(mockOptions.output);
+    const content = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
+    expect(content).toContain('<meta name="keywords" content="">');
+  });
+
+  it('should handle documents with keywords array', () => {
+    const mockData = [
+      {
+        title: 'Test Page',
+        description: 'Test Description',
+        content: 'Test Content',
+        keywords: ['seo', 'template', 'generator', 'static site'],
+      },
+    ];
+    fs.writeFileSync(mockOptions.data, JSON.stringify(mockData));
+
+    const generator = new JengaSEO(mockOptions);
+    generator.generate();
+
+    const outputFiles = fs.readdirSync(mockOptions.output);
+    const content = fs.readFileSync(path.join(mockOptions.output, outputFiles[0]), 'utf8');
+    expect(content).toContain(
+      '<meta name="keywords" content="seo, template, generator, static site">'
+    );
   });
 
   it('should handle missing template file', () => {

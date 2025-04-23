@@ -16,6 +16,7 @@ export interface DocData {
   title: string;
   description: string;
   content: string;
+  keywords?: string[];
   [key: string]: any;
 }
 
@@ -46,6 +47,7 @@ export class JengaSEO {
   }
 
   private generateTemplate(doc: DocData): string {
+    const keywords = doc.keywords ? doc.keywords.join(', ') : '';
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +56,7 @@ export class JengaSEO {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${doc.title}</title>
   <meta name="description" content="${doc.description}">
+  <meta name="keywords" content="${keywords}">
   <meta name="author" content="${this.options.author}">
   <meta property="og:title" content="${doc.title}">
   <meta property="og:description" content="${doc.description}">

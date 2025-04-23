@@ -2,6 +2,19 @@
 
 A powerful TypeScript-based static HTML template generator designed to create SEO-friendly pages that serve as a bridge between search engines and your Single Page Application (SPA). The name "Jenga" comes from the Swahili word meaning "to build", reflecting its purpose of building SEO solutions.
 
+## Table of Contents
+
+- [Features](#features)
+- [User Documentation](#user-documentation)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Configuration](#configuration)
+  - [Features and Capabilities](#features-and-capabilities)
+- [Contributor Documentation](#contributor-documentation)
+  - [Development Setup](#development-setup)
+  - [Contributing Guidelines](#contributing-guidelines)
+- [License](#license)
+
 ## Features
 
 1. Generates SEO-optimized static HTML templates
@@ -14,15 +27,17 @@ A powerful TypeScript-based static HTML template generator designed to create SE
 8. TypeScript support with full type definitions
 9. Configurable through command line arguments
 
-## Installation
+## User Documentation
+
+### Installation
 
 ```bash
 npm install jenga-seo
 ```
 
-## Usage
+### Usage
 
-### Basic Usage
+#### Basic Usage
 
 ```typescript
 import { JengaSEO } from 'jenga-seo';
@@ -39,13 +54,13 @@ const generator = new JengaSEO({
 generator.generate();
 ```
 
-### CLI Usage
+#### CLI Usage
 
 ```bash
 npx jenga-seo --data src/data/docs.json --output public/seo --base-url https://example.com --author "Your Name" --image https://example.com/images/banner.jpg --ga-id UA-XXXXX-Y
 ```
 
-### Integration with Build Process
+#### Integration with Build Process
 
 Add to your project's package.json:
 
@@ -60,7 +75,9 @@ Add to your project's package.json:
 }
 ```
 
-### Input Data Format
+### Configuration
+
+#### Input Data Format
 
 Your data file (e.g., docs.json) should be an array of objects with this structure:
 
@@ -69,12 +86,14 @@ Your data file (e.g., docs.json) should be an array of objects with this structu
   {
     "title": "Page Title",
     "description": "Page description for SEO",
-    "content": "Main content of the page"
+    "content": "Main content of the page",
+    "keywords": ["seo", "template", "generator", "static site"], // Optional array of keywords
+    "image": "https://example.com/images/page-specific-image.jpg" // Optional, overrides default image
   }
 ]
 ```
 
-### Command Line Arguments
+#### Command Line Arguments
 
 | Argument         | Description                          | Required | Default                                   |
 | ---------------- | ------------------------------------ | -------- | ----------------------------------------- |
@@ -85,22 +104,22 @@ Your data file (e.g., docs.json) should be an array of objects with this structu
 | `-i, --image`    | Default image URL                    | No       | https://your-domain.com/images/banner.jpg |
 | `-g, --ga-id`    | Google Analytics ID                  | No       | null                                      |
 
-## Generated SEO Features
+### Features and Capabilities
 
-### Meta Tags
+#### Meta Tags
 
 1. Basic meta tags (charset, viewport)
-2. SEO meta tags (title, description)
+2. SEO meta tags (title, description, keywords)
 3. Social media meta tags (Open Graph)
 4. Author information
 
-### Performance Optimizations
+#### Performance Optimizations
 
 1. Minimal inline CSS
 2. Fast redirects to SPA
 3. Optimized HTML structure
 
-## TypeScript Support
+#### TypeScript Support
 
 The package includes TypeScript definitions out of the box. You can import types:
 
@@ -118,7 +137,7 @@ const options: TemplateOptions = {
 const generator = new JengaSEO(options);
 ```
 
-## Error Handling
+#### Error Handling
 
 The generator includes comprehensive error handling:
 
@@ -128,7 +147,9 @@ The generator includes comprehensive error handling:
 4. Provides clear error messages
 5. Type-safe error handling with TypeScript
 
-## Development
+## Contributor Documentation
+
+### Development Setup
 
 ```bash
 # Install dependencies
@@ -153,14 +174,16 @@ npm run lint
 npm run format
 ```
 
-## Contributing
+### Contributing Guidelines
 
-Contributions are welcome! Please feel free to submit a Pull Request. Make sure to:
+We welcome contributions to Jenga-SEO! Before submitting a pull request, please ensure you:
 
 1. Write tests for new features
 2. Update documentation
 3. Follow the existing code style
 4. Run tests and linting before submitting
+
+For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
