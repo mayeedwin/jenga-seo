@@ -95,14 +95,26 @@ Your data file (e.g., docs.json) should be an array of objects with this structu
 
 #### Command Line Arguments
 
-| Argument         | Description                          | Required | Default                                   |
-| ---------------- | ------------------------------------ | -------- | ----------------------------------------- |
-| `-d, --data`     | Path to docs.json file               | Yes      | -                                         |
-| `-o, --output`   | Output directory for generated files | Yes      | -                                         |
-| `-b, --base-url` | Base URL for your site               | No       | https://your-domain.com                   |
-| `-a, --author`   | Author name                          | No       | Your Name                                 |
-| `-i, --image`    | Default image URL                    | No       | https://your-domain.com/images/banner.jpg |
-| `-g, --ga-id`    | Google Analytics ID                  | No       | null                                      |
+| Argument         | Description                          | Required | Default                                   | Example Value                             |
+| ---------------- | ------------------------------------ | -------- | ----------------------------------------- | ----------------------------------------- |
+| `-d, --data`     | Path to docs.json file               | Yes      | -                                         | `src/data/docs.json`                      |
+| `-o, --output`   | Output directory for generated files | Yes      | -                                         | `public/seo`                              |
+| `-b, --base-url` | Base URL for your site               | No       | https://your-domain.com                   | `https://example.com`                     |
+| `-a, --author`   | Author name                          | No       | Your Name                                 | `"John Doe"`                              |
+| `-i, --image`    | Default image URL                    | No       | https://your-domain.com/images/banner.jpg | `https://example.com/images/og-image.jpg` |
+| `-g, --ga-id`    | Google Analytics ID                  | No       | null                                      | `G-XXXXXXXXXX`                            |
+
+Example usage with all arguments:
+
+```bash
+jenga-seo \
+  --data src/data/docs.json \
+  --output public/seo \
+  --base-url https://example.com \
+  --author "John Doe" \
+  --image https://example.com/images/og-image.jpg \
+  --ga-id G-XXXXXXXXXX
+```
 
 ### Features and Capabilities
 
